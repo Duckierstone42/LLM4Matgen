@@ -171,3 +171,6 @@ archives/
 
 *.out
 *.png
+
+model/
+processed_mp_small/

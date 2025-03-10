@@ -5,9 +5,9 @@ import glob
 import torch
 import random
 import numpy as np
-
+from pathlib import Path
+import pandas as pd
 from typing import Any, Dict, List, Mapping, Optional
-
 import torch
 from datasets import load_dataset
 from torch.utils.data import Dataset
@@ -22,6 +22,8 @@ prompt_lookup = {
     "e_above_hull": "The energy above the convex hull is",
     "spacegroup_number": "The spacegroup number is",
 }
+
+
 
 class TextCompletionDataset(Dataset):
     """
@@ -68,6 +70,7 @@ class TextCompletionDataset(Dataset):
         self.duplicate_count = duplicate_count
         
         # self._data = load_dataset(source, data_files=data_files)
+        #Load entire dataset into memory? Nah
         self._data = self.load_data(source, data_files)
 
         # initialize encoder
