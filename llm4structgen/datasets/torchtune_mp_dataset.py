@@ -56,10 +56,9 @@ class TextCompletionMPDataset(Dataset):
         self.mp_to_bandgap = self.load_initial_bandgap(initial_bandgap_file)
         self.data = self._load_data(data_files)
 
-        # No encoder needed, data already in cif format
+       
     def __len__(self):
-        return len(self.data)
-
+        return min(len(self.data),100000)
     def __getitem__(self,idx):
         #Getting from data will give me mp_name, mod_type, mod_atom, initial_bandgap, modified_band_gap
 
@@ -83,17 +82,21 @@ class TextCompletionMPDataset(Dataset):
             initial_bandgap = self.mp_to_bandgap[mol_name]
             #Now, how to go from mol_name to actual name?
             df = pd.read_csv(file,header=None)
-            for index, row in df.iterrows():
+
+            #Randomly chooses one from each of the top5
+            rand_index = random.randint(0,len(df)-1)
+            row = df.iloc[rand_index]
                 
-                band_gap = row[1]
-                mod = row[0]
-                elem = [mol_name,mod,initial_bandgap,band_gap]
-                data.append(elem)
+            band_gap = row[1]
+            mod = row[0]
+            elem = [mol_name,mod,initial_bandgap,band_gap]
+            data.append(elem)
 
         return data
 
     def prepare_prompt(self,sample):
         #Sample is of format -> ["mvc-13180","exchange","Pr2","Pr1","1.7","1.4"]
+        #Use reduced cif format
 
         cif_file = Path(sample[0] + ".cif")
         cif_path = self.cif_files / cif_file

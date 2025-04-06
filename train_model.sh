@@ -1,9 +1,10 @@
 #!/bin/bash
 
-#SBATCH --job-name=train_model
+#SBATCH --job-name=train_model_custom
 #SBATCH --ntasks=1
-#SBATCH --time=12:00:00
+#SBATCH --time=16:00:00
 #SBATCH --gres=gpu:h200:1
+#SBATCH --mem=128GB
 
 
 module load anaconda3
